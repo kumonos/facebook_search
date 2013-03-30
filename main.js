@@ -8,11 +8,22 @@ window.fbAsyncInit = function() {
 		xfbml      : true  // parse XFBML tags on this page?
     });
 
-    // Additional initialization code such as adding Event Listeners goes here
-	FB.login(function(response) {
-		console.log(response);
-	}, {scope: 'read_friendlists'});
+    FB.login(function(response) {
+		if (response.authResponse) {
+			FBSearch.init();
+		} else {
+			alert("cannot login. try to reload");
+		}
+    }, {scope:'friends_work_history,friends_relationships'});
+};
 
+
+var FBSearch = {
+	init: function(){
+		FB.api('/fql', {q:'SELECT uid, name, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND relationship_status = "Single"'}, function(response) {
+			console.log(response);
+		});
+	}
 };
 
 // Load the SDK's source Asynchronously
@@ -26,3 +37,5 @@ window.fbAsyncInit = function() {
     js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
     ref.parentNode.insertBefore(js, ref);
 }(document, /*debug*/ false));
+
+

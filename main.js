@@ -22,13 +22,14 @@ var FBSearch = {
 	friends: [],
 	filter: {},
 	init: function(){
-		FB.api('/fql', {q:'SELECT uid, name, pic, profile_url, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
+		FB.api('/fql', {q:'SELECT uid, name, pic_square, profile_url, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
 			console.log(response);
 			FBSearch.friends = response.data;
 			var ul = $("#friends");
 			for(var i = 0; i < FBSearch.friends.length; i ++){
 				var friend = FBSearch.friends[i];
 				var html = "<li id='friend" + i + "'>";
+				html += "<img src=" + friend.pic_square + " />";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
 				html += " work at " + FBSearch.latestEmployer(i);
 				html += "</li>";

@@ -14,17 +14,67 @@ window.fbAsyncInit = function() {
 		} else {
 			alert("cannot login. try to reload");
 		}
-    }, {scope:'friends_work_history,friends_relationships'});
+    }, {scope:'friends_work_history,friends_relationships,friends_birthday,friends_education_history,friends_hometown,friends_location,friends_photos'});
 };
 
 
 var FBSearch = {
+	friends: [],
+	filter: {},
 	init: function(){
-		FB.api('/fql', {q:'SELECT uid, name, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND relationship_status = "Single"'}, function(response) {
+		FB.api('/fql', {q:'SELECT uid, name, pic, profile_url, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
 			console.log(response);
+			FBSearch.friends = response.data;
+			var ul = $("#friends");
+			for(var i = 0; i < FBSearch.friends.length; i ++){
+				var friend = FBSearch.friends[i];
+				var html = "<li id='friend" + i + "'>";
+				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
+				html += " work at " + FBSearch.latestEmployer(i);
+				html += "</li>";
+				ul.append(html);
+			}
 		});
+	},
+	latestEmployer: function(friendIndex){
+		var employer = "";
+		var friend = this.friends[friendIndex];
+		if(friend.work.length > 0){
+			employer = friend.work[0].employer.name;
+		}
+		return employer;
+	},
+	filterResults: function(param){
+		this.filter[param.target] = param.query;
+		for(var i = 0; i < this.friends.length; i ++){
+			var friend = this.friends[i];
+			var show = true;
+			for(var key in this.filter){
+				var query = this.filter[key];
+				if(query.length > 0){
+					if(this.getTargetData(key, i).indexOf(query) == -1){
+						show = false;
+					}
+				}
+			}
+			if(show){
+				$("#friend" + i).css("display", "block");
+			}
+			else{
+				$("#friend" + i).css("display", "none");
+			}
+		}
+	},
+	getTargetData: function(target, friendIndex){
+		if(target == "employer"){
+			return this.latestEmployer(friendIndex);
+		}
+		else{
+			return this.friends[friendIndex][target];
+		}
 	}
 };
+
 
 // Load the SDK's source Asynchronously
 // Note that the debug version is being actively developed and might 
@@ -38,4 +88,10 @@ var FBSearch = {
     ref.parentNode.insertBefore(js, ref);
 }(document, /*debug*/ false));
 
+$(function(){
+	$("#employer").keyup(function(e){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "employer", query: query});
+	});
+});
 

@@ -23,23 +23,34 @@ var FBSearch = {
 	filter: {},
 	init: function(){
 		$("#friends").text("読み込み中...");
-		var fql = 'SELECT uid, name, pic_square, profile_url, sex, education, work, birthday_date, relationship_status FROM user';
+		var fql = 'SELECT uid, name, pic_square, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
 		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
 		FB.api('/fql', {q:fql}, function(response) {
 			$("#friends").text("");
 			console.log(response);
+			if(response.error){
+				$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
+			}
 			FBSearch.friends = response.data;
 			var ul = $("#friends");
 			for(var i = 0; i < FBSearch.friends.length; i ++){
 				var friend = FBSearch.friends[i];
+				// set each data
+				friend.latestEmployer = FBSearch.getLatestEmployer(i);
+				friend.latestEducation = FBSearch.getLatestEducation(i);
+				friend.age = FBSearch.getAge(i);
+				friend.currentLocation = FBSearch.getCurrentLocation(i);
+
+				// make view html
 				var html = "<li id='friend" + i + "' class='clearfix friends_li'>";
 				html += "<div class='friend_img'><img src=" + friend.pic_square + " /></div>";
 				html += "<div class='friend_info'>";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
-				html += " work at " + FBSearch.getLatestEmployer(i) + "<br />";
-				html += "education: " + FBSearch.getLatestEducation(i) + "<br />";
+				html += " work at " + friend.latestEmployer + "<br />";
+				html += "education: " + friend.latestEducation + "<br />";
 				html += friend.sex + ", " + friend.relationship_status + "<br />";
-				html += "age: " + FBSearch.getAge(i);
+				html += "age: " + friend.age + "<br />";
+				html += "location: " + friend.currentLocation;
 				html += "</div>";
 				html += "</li>";
 				ul.append(html);
@@ -82,6 +93,15 @@ var FBSearch = {
 		age = Math.floor((today - birthday) / 10000);
 		return age;
 	},
+	getCurrentLocation: function(friendIndex){
+		var location = "";
+		var friend = this.friends[friendIndex];
+		var locationObject = friend.current_location;
+		if(locationObject){
+			location = locationObject.name;
+		}
+		return location;
+	},
 	filterResults: function(param){
 		if(param.query.length == 0){
 			delete this.filter[param.target];
@@ -100,7 +120,7 @@ var FBSearch = {
 						show = false;
 					}
 					else{
-						if(key == "employer" || key == "education"){
+						if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation"){
 							// 部分一致
 							if(targetData.indexOf(query) == -1){
 								show = false;
@@ -136,14 +156,8 @@ var FBSearch = {
 		}
 	},
 	getTargetData: function(target, friendIndex){
-		if(target == "employer"){
-			return this.getLatestEmployer(friendIndex);
-		}
-		else if(target == "education"){
-			return this.getLatestEducation(friendIndex);
-		}
-		else if(target == "age_min" || target == "age_max"){
-			return this.getAge(friendIndex);
+		if(target == "age_min" || target == "age_max"){
+			return this.friends[friendIndex].age;
 		}
 		else{
 			data = this.friends[friendIndex][target];
@@ -173,12 +187,17 @@ var FBSearch = {
 $(function(){
 	$("#employer").keyup(function(e){
 		var query = $(this).val();
-		FBSearch.filterResults({target: "employer", query: query});
+		FBSearch.filterResults({target: "latestEmployer", query: query});
 	});
 
 	$("#education").keyup(function(e){
 		var query = $(this).val();
-		FBSearch.filterResults({target: "education", query: query});
+		FBSearch.filterResults({target: "latestEducation", query: query});
+	});
+
+	$("#currentLocation").keyup(function(e){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "currentLocation", query: query});
 	});
 	
 	$("#age_min").keyup(function(){
@@ -191,7 +210,7 @@ $(function(){
 		FBSearch.filterResults({target: "age_max", query: query});
 	});
 
-	$("#gender").click(function(){
+	$(".gender").click(function(){
 		var query = $(this).val();
 		if(query == "male" || query == "female"){
 			FBSearch.filterResults({target: "sex", query: query});

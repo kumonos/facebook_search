@@ -81,7 +81,12 @@ var FBSearch = {
 		return age;
 	},
 	filterResults: function(param){
-		this.filter[param.target] = param.query;
+		if(param.query.length == 0){
+			delete this.filter[param.target];
+		}
+		else{
+			this.filter[param.target] = param.query;
+		}
 		for(var i = 0; i < this.friends.length; i ++){
 			var friend = this.friends[i];
 			var show = true;
@@ -89,28 +94,33 @@ var FBSearch = {
 				var query = this.filter[key];
 				if(query.length > 0){
 					targetData = this.getTargetData(key, i);
-					if(key == "employer" || key == "education"){
-						// 部分一致
-						if(targetData.indexOf(query) == -1){
-							show = false;
-						}
-					}
-					else if(key == "age_min"){
-						// 最小値
-						if(targetData < query){
-							show = false;
-						}
-					}
-					else if(key == "age_max"){
-						// 最大値
-						if(targetData > query){
-							show = false;
-						}
+					if(!targetData){
+						show = false;
 					}
 					else{
-						// 完全一致
-						if(targetData != query){
-							show = false;
+						if(key == "employer" || key == "education"){
+							// 部分一致
+							if(targetData.indexOf(query) == -1){
+								show = false;
+							}
+						}
+						else if(key == "age_min"){
+							// 最小値
+							if(targetData < query){
+								show = false;
+							}
+						}
+						else if(key == "age_max"){
+							// 最大値
+							if(targetData > query){
+								show = false;
+							}
+						}
+						else{
+							// 完全一致
+							if(targetData != query){
+								show = false;
+							}
 						}
 					}
 				}

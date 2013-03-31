@@ -15,7 +15,18 @@
 <div id="fb-root"></div>
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="main.js"></script>
+<h1>Facebook Friend Search</h1>
+<div id="howto">
+	<h2>使い方</h2>
+	<p>
+	※ページを開くとログイン＆アプリ承認のポップアップが出ます。出ない場合はブラウザでブロックされてないかご確認ください。<br />
+	※ログイン＆アプリ承認が終わると、ポップアップが閉じて友達リストの読み込みが始まります。友達リストが表示されるまで少々お待ちください。<br />
+	※友達リストが表示されたら自由に検索してください。
+	</p>
+</div>
 <div>
+	<h2>検索</h2>
+	<div>
 	会社：<input type="text" id="employer" /><br />
 	性別：<input type="radio" class="gender" name="gender" value="both" checked />指定なし
 		<input type="radio" class="gender" name="gender" value="male" />男性
@@ -23,7 +34,10 @@
 	交際状況：<input type="radio" class="relationship_status" name="rionship_status" value="" checked />指定なし
 		<input type="radio" class="relationship_status" name="rionship_status" value="Single" />独身
 		<input type="radio" class="relationship_status" name="rionship_status" value="In a Relationship" />交際中
+		<input type="radio" class="relationship_status" name="rionship_status" value="In an Open Relationship" />オープンな関係
 		<input type="radio" class="relationship_status" name="rionship_status" value="Married" />既婚<br />
+	</div>
+	<h2>友達リスト</h2>
 	<ul id="friends">
     </ul>
 </div>

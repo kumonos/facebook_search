@@ -1,0 +1,143 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/*------------------------------------------------
+initialize
+------------------------------------------------*/
+
+*{
+margin:0;
+padding:0;
+}
+
+*:first-child+html img {
+border:0px;
+margin:0px;
+padding:0px;
+vertical-align: top;
+}
+
+img{
+border:0;
+margin:0;
+padding:0;
+}
+
+*:first-child+html img {vertical-align: bottom;}
+
+*html img {vertical-align: bottom;}
+
+*:first-child+html body{
+padding-left:1px;
+}
+
+*html body{
+padding-left: 1px;
+}
+*+html body{
+padding-left: 1px;
+}
+
+body{
+margin-left:0px;
+margin-top:0px;
+margin-right:0px;
+margin-bottom:0px;
+font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic Pro";
+font-size:75%;
+line-height:1.5em;
+color:#666666;
+}
+
+input, textarea {
+font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "ＭＳ Ｐゴシック", "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+}
+
+p{
+_font-size:12px;
+}
+
+
+
+/*------------------
+link
+-------------------*/
+	
+a {
+color:#699AFF;
+text-decoration:none;
+margin:0;
+padding:0;
+outline:none;
+}
+
+a:visited{
+color:#699AFF;
+text-decoration:none;
+margin:0;
+padding:0;
+}
+
+a:hover{
+color:#699AFF;
+text-decoration:underline;
+margin:0;
+padding:0;
+}
+
+
+
+/*------------------
+clearfix
+-------------------*/
+.clearfix:after {
+	content:"";
+	height:0;
+	display:block;
+	clear:both;
+	}
+/*---
+For IE
+-----*/
+.clearfix {
+	display:inline-block;
+	}
+/* for Mac IE \*/
+.clearfix { display: block; }
+/* */
+
+
+
+ul{
+list-style-type:none;
+}
+
+
+
+/*------------------
+float
+-------------------*/
+.left{
+float:left;
+}
+.right{
+float:right;
+}
+
+
+/*------------------------------------------------
+content
+------------------------------------------------*/
+.friends_li{
+	margin: 0 0 10px 0;
+}
+
+.friend_img{
+	margin: 0 10px 0 0;
+	float: left;
+}
+
+.friend_info{
+	float: left;
+}
+

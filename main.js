@@ -22,22 +22,25 @@ var FBSearch = {
 	friends: [],
 	filter: {},
 	init: function(){
-		FB.api('/fql', {q:'SELECT uid, name, pic_square, profile_url, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
+		FB.api('/fql', {q:'SELECT uid, name, pic_square, profile_url, sex, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
 			console.log(response);
 			FBSearch.friends = response.data;
 			var ul = $("#friends");
 			for(var i = 0; i < FBSearch.friends.length; i ++){
 				var friend = FBSearch.friends[i];
-				var html = "<li id='friend" + i + "'>";
-				html += "<img src=" + friend.pic_square + " />";
+				var html = "<li id='friend" + i + "' class='clearfix friends_li'>";
+				html += "<div class='friend_img'><img src=" + friend.pic_square + " /></div>";
+				html += "<div class='friend_info'>";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
-				html += " work at " + FBSearch.latestEmployer(i);
+				html += " work at " + FBSearch.getLatestEmployer(i) + "<br />";
+				html += friend.sex + ", " + friend.relationship_status;
+				html += "</div>";
 				html += "</li>";
 				ul.append(html);
 			}
 		});
 	},
-	latestEmployer: function(friendIndex){
+	getLatestEmployer: function(friendIndex){
 		var employer = "";
 		var friend = this.friends[friendIndex];
 		if(friend.work.length > 0){
@@ -47,14 +50,25 @@ var FBSearch = {
 	},
 	filterResults: function(param){
 		this.filter[param.target] = param.query;
+		console.log(this.filter);
 		for(var i = 0; i < this.friends.length; i ++){
 			var friend = this.friends[i];
 			var show = true;
 			for(var key in this.filter){
 				var query = this.filter[key];
 				if(query.length > 0){
-					if(this.getTargetData(key, i).indexOf(query) == -1){
-						show = false;
+					targetData = this.getTargetData(key, i);
+					if(key == "employer"){
+						// 部分一致
+						if(targetData.indexOf(query) == -1){
+							show = false;
+						}
+					}
+					else{
+						// 完全一致
+						if(targetData != query){
+							show = false;
+						}
 					}
 				}
 			}
@@ -68,10 +82,14 @@ var FBSearch = {
 	},
 	getTargetData: function(target, friendIndex){
 		if(target == "employer"){
-			return this.latestEmployer(friendIndex);
+			return this.getLatestEmployer(friendIndex);
 		}
 		else{
-			return this.friends[friendIndex][target];
+			data = this.friends[friendIndex][target];
+			if(data == null || data == undefined){
+				data = "";
+			}
+			return data;
 		}
 	}
 };
@@ -89,10 +107,27 @@ var FBSearch = {
     ref.parentNode.insertBefore(js, ref);
 }(document, /*debug*/ false));
 
+
+// events
 $(function(){
 	$("#employer").keyup(function(e){
 		var query = $(this).val();
 		FBSearch.filterResults({target: "employer", query: query});
+	});
+
+	$(".gender").click(function(){
+		var query = $(this).val();
+		if(query == "male" || query == "female"){
+			FBSearch.filterResults({target: "sex", query: query});
+		}
+		else{
+			FBSearch.filterResults({target: "sex", query: ""});
+		}
+	});
+	
+	$(".relationship_status").click(function(){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "relationship_status", query: query});
 	});
 });
 

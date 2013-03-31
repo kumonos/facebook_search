@@ -8,6 +8,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <meta name="robots" content="INDEX,FOLLOW" />
+<link href="main.css" rel="stylesheet" type="text/css" media="all">
 </head>
 
 <body>
@@ -16,6 +17,13 @@
 <script type="text/javascript" src="main.js"></script>
 <div>
 	会社：<input type="text" id="employer" /><br />
+	性別：<input type="radio" class="gender" name="gender" value="both" checked />指定なし
+		<input type="radio" class="gender" name="gender" value="male" />男性
+		<input type="radio" class="gender" name="gender" value="female" />女性<br />
+	交際状況：<input type="radio" class="relationship_status" name="rionship_status" value="" checked />指定なし
+		<input type="radio" class="relationship_status" name="rionship_status" value="Single" />独身
+		<input type="radio" class="relationship_status" name="rionship_status" value="In a Relationship" />交際中
+		<input type="radio" class="relationship_status" name="rionship_status" value="Married" />既婚<br />
 	<ul id="friends">
     </ul>
 </div>

@@ -12,7 +12,7 @@ window.fbAsyncInit = function() {
 		if (response.authResponse) {
 			FBSearch.init();
 		} else {
-			alert("cannot login. try to reload");
+			$("#friends").text("友達リストの読み込みに失敗しました。ページをリロードして下さい。");
 		}
     }, {scope:'friends_work_history,friends_relationships,friends_birthday,friends_education_history,friends_hometown,friends_location,friends_photos'});
 };
@@ -22,9 +22,11 @@ var FBSearch = {
 	friends: [],
 	filter: {},
 	init: function(){
+		$("#friends").text("読み込み中...");
 		var fql = 'SELECT uid, name, pic_square, profile_url, sex, education, work, birthday_date, relationship_status FROM user';
 		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
 		FB.api('/fql', {q:fql}, function(response) {
+			$("#friends").text("");
 			console.log(response);
 			FBSearch.friends = response.data;
 			var ul = $("#friends");

@@ -22,7 +22,9 @@ var FBSearch = {
 	friends: [],
 	filter: {},
 	init: function(){
-		FB.api('/fql', {q:'SELECT uid, name, pic_square, profile_url, sex, education, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
+		var fql = 'SELECT uid, name, pic_square, profile_url, sex, education, work, birthday_date, relationship_status FROM user';
+		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
+		FB.api('/fql', {q:fql}, function(response) {
 			console.log(response);
 			FBSearch.friends = response.data;
 			var ul = $("#friends");
@@ -34,7 +36,8 @@ var FBSearch = {
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
 				html += " work at " + FBSearch.getLatestEmployer(i) + "<br />";
 				html += "education: " + FBSearch.getLatestEducation(i) + "<br />";
-				html += friend.sex + ", " + friend.relationship_status;
+				html += friend.sex + ", " + friend.relationship_status + "<br />";
+				html += "age: " + FBSearch.getAge(i);
 				html += "</div>";
 				html += "</li>";
 				ul.append(html);
@@ -57,9 +60,28 @@ var FBSearch = {
 		}
 		return school;
 	},
+	getAge: function(friendIndex){
+		var age = "";
+		var friend = this.friends[friendIndex];
+		var birthday_date = friend.birthday_date;
+		if(!birthday_date){
+			return age;
+		}
+		var birthdayYear = birthday_date.substr(6, 4);
+		var birthdayMonth = birthday_date.substr(0, 2);
+		var birthdayDay = birthday_date.substr(3, 2);
+		if(!birthdayYear || !birthdayMonth || !birthdayDay){
+			return age;
+		}
+		
+		var birthday = String(birthdayYear) + String(birthdayMonth)+ String(birthdayDay);
+		var today = new Date();
+		today = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+		age = Math.floor((today - birthday) / 10000);
+		return age;
+	},
 	filterResults: function(param){
 		this.filter[param.target] = param.query;
-		console.log(this.filter);
 		for(var i = 0; i < this.friends.length; i ++){
 			var friend = this.friends[i];
 			var show = true;
@@ -70,6 +92,18 @@ var FBSearch = {
 					if(key == "employer" || key == "education"){
 						// 部分一致
 						if(targetData.indexOf(query) == -1){
+							show = false;
+						}
+					}
+					else if(key == "age_min"){
+						// 最小値
+						if(targetData < query){
+							show = false;
+						}
+					}
+					else if(key == "age_max"){
+						// 最大値
+						if(targetData > query){
 							show = false;
 						}
 					}
@@ -95,6 +129,9 @@ var FBSearch = {
 		}
 		else if(target == "education"){
 			return this.getLatestEducation(friendIndex);
+		}
+		else if(target == "age_min" || target == "age_max"){
+			return this.getAge(friendIndex);
 		}
 		else{
 			data = this.friends[friendIndex][target];
@@ -131,8 +168,18 @@ $(function(){
 		var query = $(this).val();
 		FBSearch.filterResults({target: "education", query: query});
 	});
+	
+	$("#age_min").keyup(function(){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "age_min", query: query});
+	});
+	
+	$("#age_max").keyup(function(){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "age_max", query: query});
+	});
 
-	$(".gender").click(function(){
+	$("#gender").click(function(){
 		var query = $(this).val();
 		if(query == "male" || query == "female"){
 			FBSearch.filterResults({target: "sex", query: query});

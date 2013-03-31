@@ -22,7 +22,7 @@ var FBSearch = {
 	friends: [],
 	filter: {},
 	init: function(){
-		FB.api('/fql', {q:'SELECT uid, name, pic_square, profile_url, sex, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
+		FB.api('/fql', {q:'SELECT uid, name, pic_square, profile_url, sex, education, work, relationship_status FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())'}, function(response) {
 			console.log(response);
 			FBSearch.friends = response.data;
 			var ul = $("#friends");
@@ -33,6 +33,7 @@ var FBSearch = {
 				html += "<div class='friend_info'>";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
 				html += " work at " + FBSearch.getLatestEmployer(i) + "<br />";
+				html += "education: " + FBSearch.getLatestEducation(i) + "<br />";
 				html += friend.sex + ", " + friend.relationship_status;
 				html += "</div>";
 				html += "</li>";
@@ -48,6 +49,14 @@ var FBSearch = {
 		}
 		return employer;
 	},
+	getLatestEducation: function(friendIndex){
+		var school = "";
+		var friend = this.friends[friendIndex];
+		if(friend.education.length > 0){
+			school = friend.education[friend.education.length - 1].school.name;
+		}
+		return school;
+	},
 	filterResults: function(param){
 		this.filter[param.target] = param.query;
 		console.log(this.filter);
@@ -58,7 +67,7 @@ var FBSearch = {
 				var query = this.filter[key];
 				if(query.length > 0){
 					targetData = this.getTargetData(key, i);
-					if(key == "employer"){
+					if(key == "employer" || key == "education"){
 						// 部分一致
 						if(targetData.indexOf(query) == -1){
 							show = false;
@@ -83,6 +92,9 @@ var FBSearch = {
 	getTargetData: function(target, friendIndex){
 		if(target == "employer"){
 			return this.getLatestEmployer(friendIndex);
+		}
+		else if(target == "education"){
+			return this.getLatestEducation(friendIndex);
 		}
 		else{
 			data = this.friends[friendIndex][target];
@@ -113,6 +125,11 @@ $(function(){
 	$("#employer").keyup(function(e){
 		var query = $(this).val();
 		FBSearch.filterResults({target: "employer", query: query});
+	});
+
+	$("#education").keyup(function(e){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "education", query: query});
 	});
 
 	$(".gender").click(function(){

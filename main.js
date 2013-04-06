@@ -23,7 +23,7 @@ var FBSearch = {
 	filter: {},
 	init: function(){
 		$("#friends").text("読み込み中...");
-		var fql = 'SELECT uid, name, pic_square, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
+		var fql = 'SELECT uid, name, pic, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
 		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
 		FB.api('/fql', {q:fql}, function(response) {
 			$("#friends").text("");
@@ -43,7 +43,7 @@ var FBSearch = {
 
 				// make view html
 				var html = "<li id='friend" + i + "' class='clearfix friends_li'>";
-				html += "<div class='friend_img'><img src=" + friend.pic_square + " /></div>";
+				html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
 				html += "<div class='friend_info'>";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
 				html += " work at " + friend.latestEmployer + "<br />";

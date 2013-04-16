@@ -25,7 +25,7 @@ var FBSearch = {
 		$("#friends").text("読み込み中...");
 		var fql = 'SELECT uid, name, pic, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
 		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
-		FB.api('/fql', {q:fql}, function(response) {
+		FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
 			$("#friends").text("");
 			console.log(response);
 			if(response.error){

@@ -4,4 +4,4 @@
  header("Cache-Control: max-age=".$cache_expire);
  header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$cache_expire) . ' GMT');
  ?>
- <script src="//connect.facebook.net/en_US/all.js"></script>
+ <script src="//connect.facebook.net/ja_JP/all.js"></script>

@@ -15,7 +15,8 @@
 <div id="fb-root"></div>
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="main.js"></script>
-<h1>Facebook Friend Search</h1>
+<div id="header"><h1>Facebook Friend Search<span id="header_copy">powered by Kumonos</span></h1></div>
+<div id="wrapper">
 <div id="howto">
 	<h2>使い方</h2>
 	<p>
@@ -27,18 +28,42 @@
 <div>
 	<h2>検索</h2>
 	<div>
-	会社：<input type="text" id="employer" /><br />
-	大学（最終学歴）：<input type="text" id="education" /><br />
-	居住地区：<input type="text" id="currentLocation" /><br />
-	年齢：<input type="text" id="age_min" size="3"/>〜<input type="text" id="age_max" size="3"/><br />
-	性別：<input type="radio" class="gender" name="gender" value="both" checked />指定なし
-		<input type="radio" class="gender" name="gender" value="male" />男性
-		<input type="radio" class="gender" name="gender" value="female" />女性<br />
-	交際状況：<input type="radio" class="relationship_status" name="rionship_status" value="" checked />指定なし
-		<input type="radio" class="relationship_status" name="rionship_status" value="Single" />独身
-		<input type="radio" class="relationship_status" name="rionship_status" value="In a Relationship" />交際中
-		<input type="radio" class="relationship_status" name="rionship_status" value="In an Open Relationship" />オープンな関係
-		<input type="radio" class="relationship_status" name="rionship_status" value="Married" />既婚<br />
+		<table>
+			<tr>
+				<th class="query_th">会社</th>
+				<td class="query_td"><input type="text" id="employer" /></td>
+			</tr>
+			<tr>
+				<th class="query_th">大学（最終学歴）</th>
+				<td class="query_td"><input type="text" id="education" /></td>
+			</tr>
+			<tr>
+				<th class="query_th">居住地区</th>
+				<td class="query_td"><input type="text" id="currentLocation" /></td>
+			</tr>
+			<tr>
+				<th class="query_th">年齢</th>
+				<td class="query_td"><input type="text" id="age_min" size="3"/>〜<input type="text" id="age_max" size="3"/></td>
+			</tr>
+			<tr>
+				<th class="query_th">性別</th>
+				<td class="query_td">
+					<input type="radio" class="gender" name="gender" value="both" checked />指定なし
+					<input type="radio" class="gender" name="gender" value="male" />男性
+					<input type="radio" class="gender" name="gender" value="female" />女性
+				</td>
+			</tr>
+			<tr>
+				<th class="query_th">交際状況</th>
+				<td class="query_td">
+					<input type="radio" class="relationship_status" name="rionship_status" value="" checked />指定なし
+					<input type="radio" class="relationship_status" name="rionship_status" value="Single" />独身
+					<input type="radio" class="relationship_status" name="rionship_status" value="In a Relationship" />交際中
+					<input type="radio" class="relationship_status" name="rionship_status" value="In an Open Relationship" />オープンな関係
+					<input type="radio" class="relationship_status" name="rionship_status" value="Married" />既婚
+				</td>
+			</tr>
+		</table>
 	</div>
 	<script type="text/javascript"><!--
 	google_ad_client = "ca-pub-8603358564122513";
@@ -54,6 +79,7 @@
 	<h2>友達リスト</h2>
 	<ul id="friends">
     </ul>
+</div>
 </div>
 
 <script>

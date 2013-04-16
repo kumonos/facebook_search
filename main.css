@@ -128,12 +128,51 @@ float:right;
 /*------------------------------------------------
 content
 ------------------------------------------------*/
+#header{
+	padding: 10px 0 10px 0;
+	width: 100%;
+	background: #4660a2;
+}
+
 h1{
-	margin: 10px 0 20px 0;
+	margin: 0 auto;
+	width: 920px;
+	color: #FFF;
+	font-weight: bold;
+	line-height: 24px;
+	font-size: 16px;
+}
+
+#header_copy{
+	margin: 0 0 0 20px;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#wrapper{
+	width: 920px;
+	margin: 0 auto;
+	padding: 20px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
 }
 
 h2{
-	margin: 20px 0 10px 0;
+	margin: 0px 0 10px 0;
+	padding: 5px;
+	background: #f2f2f2;
+	border-top: solid 1px #e2e2e2;
+	font-size: 12px;
+}
+
+#howto{
+	margin: 0 0 20px 0;
+}
+
+.query_th, .query_td{
+	text-align: left;
+	padding: 5px;
+	border-bottom: solid 1px #e2e2e2;
 }
 
 .friends_li{

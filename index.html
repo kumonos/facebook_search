@@ -31,19 +31,31 @@
 		<table>
 			<tr>
 				<th class="query_th">会社</th>
-				<td class="query_td"><input type="text" id="employer" /></td>
+				<td class="query_td">
+					<input type="text" id="employer" />
+					<input type="checkbox" id="latestEmployer_show_empty" class="trigger_filter" value="true">データがない人を表示
+				</td>
 			</tr>
 			<tr>
 				<th class="query_th">大学（最終学歴）</th>
-				<td class="query_td"><input type="text" id="education" /></td>
+				<td class="query_td">
+					<input type="text" id="education" />
+					<input type="checkbox" id="latestEducation_show_empty" class="trigger_filter" value="true">データがない人を表示
+				</td>
 			</tr>
 			<tr>
 				<th class="query_th">居住地区</th>
-				<td class="query_td"><input type="text" id="currentLocation" /></td>
+				<td class="query_td">
+					<input type="text" id="currentLocation" />
+					<input type="checkbox" id="currentLocation_show_empty" class="trigger_filter" value="true">データがない人を表示
+				</td>
 			</tr>
 			<tr>
 				<th class="query_th">年齢</th>
-				<td class="query_td"><input type="text" id="age_min" size="3"/>〜<input type="text" id="age_max" size="3"/></td>
+				<td class="query_td">
+					<input type="text" id="age_min" size="3"/>〜<input type="text" id="age_max" size="3"/>
+					<input type="checkbox" id="age_show_empty" class="trigger_filter" value="true">データがない人を表示
+				</td>
 			</tr>
 			<tr>
 				<th class="query_th">性別</th>

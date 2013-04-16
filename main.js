@@ -103,12 +103,22 @@ var FBSearch = {
 		return location;
 	},
 	filterResults: function(param){
-		if(param.query.length == 0){
-			delete this.filter[param.target];
+		// set default param
+		if(typeof param === "undefined"){
+			param = {};
 		}
-		else{
-			this.filter[param.target] = param.query;
+
+		// set filter query
+		if(typeof param.target !== "undefined"){
+			if(typeof param.query !== "undefined" && param.query.length == 0){
+				delete this.filter[param.target];
+			}
+			else{
+				this.filter[param.target] = param.query;
+			}
 		}
+
+		// filter results
 		for(var i = 0; i < this.friends.length; i ++){
 			var friend = this.friends[i];
 			var show = true;
@@ -117,7 +127,11 @@ var FBSearch = {
 				if(query.length > 0){
 					targetData = this.getTargetData(key, i);
 					if(!targetData){
-						show = false;
+						var id = key + "_show_empty";
+						if(key == "age_min" || key == "age_max"){
+							id = "age_show_empty";
+						}
+						show = $("#" + id).is(":checked");
 					}
 					else{
 						if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation"){
@@ -223,6 +237,10 @@ $(function(){
 	$(".relationship_status").click(function(){
 		var query = $(this).val();
 		FBSearch.filterResults({target: "relationship_status", query: query});
+	});
+	
+	$(".trigger_filter").click(function(){
+		FBSearch.filterResults();
 	});
 });
 

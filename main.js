@@ -124,14 +124,36 @@ var FBSearch = {
 			var show = true;
 			for(var key in this.filter){
 				var query = this.filter[key];
-				if(query.length > 0){
+				if(typeof query !== "undefined"){
 					targetData = this.getTargetData(key, i);
-					if(!targetData){
+					if(key.indexOf("sex_") === 0){
+						if(!query){
+							if((key == "sex_male" && targetData === "男性")
+							  || (key == "sex_female" && targetData === "女性")
+							  || (key === "sex_empty" && !targetData)){
+								show = false;
+							}
+						}
+					}
+					else if(key.indexOf("relationship_status_") === 0){
+						if(!query){
+							if((key == "relationship_status_Single" && targetData === "独身")
+							   || (key == "relationship_status_In a Relationship" && targetData === "交際中")
+							   || (key == "relationship_status_In an Open Relationship" && targetData === "オープンな関係")
+							   || (key == "relationship_status_Married" && targetData === "既婚")
+							   || (key == "relationship_status_empty" && !targetData)){
+								show = false;
+							}
+						}
+					}
+					else if(!targetData){
 						var id = key + "_show_empty";
 						if(key == "age_min" || key == "age_max"){
 							id = "age_show_empty";
 						}
-						show = $("#" + id).is(":checked");
+						if(!$("#" + id).is(":checked")){
+							show = false;
+						}
 					}
 					else{
 						if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation"){
@@ -172,6 +194,12 @@ var FBSearch = {
 	getTargetData: function(target, friendIndex){
 		if(target == "age_min" || target == "age_max"){
 			return this.friends[friendIndex].age;
+		}
+		else if(target.indexOf("sex_") === 0){
+			return this.friends[friendIndex].sex;
+		}
+		else if(target.indexOf("relationship_status_") === 0){
+			return this.friends[friendIndex].relationship_status;
 		}
 		else{
 			data = this.friends[friendIndex][target];
@@ -225,18 +253,13 @@ $(function(){
 	});
 
 	$(".gender").click(function(){
-		var query = $(this).val();
-		if(query == "male" || query == "female"){
-			FBSearch.filterResults({target: "sex", query: query});
-		}
-		else{
-			FBSearch.filterResults({target: "sex", query: ""});
-		}
+		var query = $(this).is(":checked");
+		FBSearch.filterResults({target: "sex_" + $(this).val(), query: query});
 	});
 	
 	$(".relationship_status").click(function(){
-		var query = $(this).val();
-		FBSearch.filterResults({target: "relationship_status", query: query});
+		var query = $(this).is(":checked");
+		FBSearch.filterResults({target: "relationship_status_" + $(this).val(), query: query});
 	});
 	
 	$(".trigger_filter").click(function(){

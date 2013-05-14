@@ -27,8 +27,15 @@
 </div>
 <div>
 	<h2>検索</h2>
-	<div>
+	<div id="search_boxes">
 		<table>
+			<tr>
+				<th class="query_th">名前</th>
+				<td class="query_td">
+					<input type="text" id="name" />
+					<input type="checkbox" id="name_show_empty" class="trigger_filter" value="true">データがない人を表示
+				</td>
+			</tr>
 			<tr>
 				<th class="query_th">会社</th>
 				<td class="query_td">

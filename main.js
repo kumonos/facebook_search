@@ -55,6 +55,7 @@ var FBSearch = {
 				html += "</li>";
 				ul.append(html);
 			}
+			$("#search_boxes").css("display", "block");
 		});
 	},
 	getLatestEmployer: function(friendIndex){
@@ -125,7 +126,7 @@ var FBSearch = {
 			for(var key in this.filter){
 				var query = this.filter[key];
 				if(typeof query !== "undefined"){
-					targetData = this.getTargetData(key, i);
+					var targetData = this.getTargetData(key, i);
 					if(key.indexOf("sex_") === 0){
 						if(!query){
 							if((key == "sex_male" && targetData === "男性")
@@ -156,7 +157,7 @@ var FBSearch = {
 						}
 					}
 					else{
-						if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation"){
+						if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation" || key == "name"){
 							// 部分一致
 							if(targetData.indexOf(query) == -1){
 								show = false;
@@ -227,6 +228,11 @@ var FBSearch = {
 
 // events
 $(function(){
+	$("#name").keyup(function(e){
+		var query = $(this).val();
+		FBSearch.filterResults({target: "name", query: query});
+	});
+
 	$("#employer").keyup(function(e){
 		var query = $(this).val();
 		FBSearch.filterResults({target: "latestEmployer", query: query});
@@ -266,4 +272,3 @@ $(function(){
 		FBSearch.filterResults();
 	});
 });
-

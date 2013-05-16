@@ -7,16 +7,7 @@ window.fbAsyncInit = function() {
 		cookie     : true, // set sessions cookies to allow your server to access the session?
 		xfbml      : true  // parse XFBML tags on this page?
     });
-
-    FB.login(function(response) {
-		if (response.authResponse) {
-			FBSearch.init();
-		} else {
-			$("#friends").text("友達リストの読み込みに失敗しました。ページをリロードして下さい。");
-		}
-    }, {scope:'friends_work_history,friends_relationships,friends_birthday,friends_education_history,friends_hometown,friends_location,friends_photos'});
 };
-
 
 var FBSearch = {
 	friends: [],
@@ -159,6 +150,8 @@ var FBSearch = {
 					else{
 						if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation" || key == "name"){
 							// 部分一致
+							targetData = targetData.toLowerCase();
+							query = query.toLowerCase();
 							if(targetData.indexOf(query) == -1){
 								show = false;
 							}
@@ -221,13 +214,27 @@ var FBSearch = {
     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
     if (d.getElementById(id)) {return;}
     js = d.createElement('script'); js.id = id; js.async = true;
-    js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+    js.src = "//connect.facebook.net/ja_JP/all" + (debug ? "/debug" : "") + ".js";
     ref.parentNode.insertBefore(js, ref);
 }(document, /*debug*/ false));
 
 
 // events
 $(function(){
+	// start to use
+	$("#use_button").click(function(){
+		$("#search_main").css("display", "block");
+		$(this).css("display", "none");
+		FB.login(function(response) {
+			if (response.authResponse) {
+				FBSearch.init();
+			} else {
+				$("#friends").text("友達リストの読み込みに失敗しました。ページをリロードして下さい。");
+			}
+		}, {scope:'friends_work_history,friends_relationships,friends_birthday,friends_education_history,friends_hometown,friends_location,friends_photos'});
+	});
+	
+	// search event
 	$("#name").keyup(function(e){
 		var query = $(this).val();
 		FBSearch.filterResults({target: "name", query: query});

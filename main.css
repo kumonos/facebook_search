@@ -169,6 +169,22 @@ h2{
 	margin: 0 0 20px 0;
 }
 
+#use_button{
+	cursor: pointer;
+	background: #4660a2;
+	color: #fff;
+	font-weight: bold;
+	font-size: 20px;
+	padding: 15px 0;
+	margin: 15px auto 0 auto;
+	width: 300px;
+	text-align: center;
+}
+
+#search_main{
+	display: none;
+}
+
 #search_boxes{
 	display: none;
 }

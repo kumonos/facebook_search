@@ -169,6 +169,10 @@ h2{
 	margin: 0 0 20px 0;
 }
 
+#like_button{
+	margin: 10px 0 0 0;
+}
+
 #use_button{
 	cursor: pointer;
 	background: #4660a2;

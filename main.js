@@ -45,6 +45,8 @@ var FBSearch = {
 				html += "</div>";
 				html += "</li>";
 				ul.append(html);
+				
+				FBSearch.showResultNum(FBSearch.friends.length);
 			}
 			$("#search_boxes").css("display", "block");
 		});
@@ -111,6 +113,7 @@ var FBSearch = {
 		}
 
 		// filter results
+		var resultNum = 0;
 		for(var i = 0; i < this.friends.length; i ++){
 			var friend = this.friends[i];
 			var show = true;
@@ -179,11 +182,16 @@ var FBSearch = {
 			}
 			if(show){
 				$("#friend" + i).css("display", "block");
+				resultNum ++;
 			}
 			else{
 				$("#friend" + i).css("display", "none");
 			}
 		}
+		this.showResultNum(resultNum);
+	},
+	showResultNum: function(num){
+		$("#result_num").text("検索結果： " + num + "件");
 	},
 	getTargetData: function(target, friendIndex){
 		if(target == "age_min" || target == "age_max"){

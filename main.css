@@ -149,6 +149,10 @@ h1{
 	font-weight: normal;
 }
 
+#kumonos_link{
+	color: #fff;
+}
+
 #wrapper{
 	width: 920px;
 	margin: 0 auto;

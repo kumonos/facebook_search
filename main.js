@@ -18,7 +18,6 @@ var FBSearch = {
 		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
 		FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
 			$("#friends").text("");
-			console.log(response);
 			if(response.error){
 				$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
 			}

@@ -165,6 +165,14 @@ h2{
 	font-size: 12px;
 }
 
+#description{
+	margin: 0 0 20px 0;
+}
+
+#description_ul{
+	margin: 20px 0 20px 0;
+}
+
 #howto{
 	margin: 0 0 20px 0;
 }

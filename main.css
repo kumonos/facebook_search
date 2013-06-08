@@ -223,4 +223,19 @@ h2{
 .friend_info{
 	float: left;
 }
+	
+.showphoto {
+	color:#699AFF;
+	text-decoration:none;
+	margin:0;
+	padding:0;
+	outline:none;
+}
 
+.showphoto:hover{
+	color:#699AFF;
+	text-decoration:underline;
+	margin:0;
+	padding:0;
+	cursor: pointer;
+}

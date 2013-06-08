@@ -32,7 +32,8 @@ var FBSearch = {
 				friend.currentLocation = FBSearch.getCurrentLocation(i);
 
 				// make view html
-				var html = "<li id='friend" + i + "' class='clearfix friends_li'>";
+				var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
+				html += "<div class='clearfix'>";
 				html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
 				html += "<div class='friend_info'>";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
@@ -40,10 +41,42 @@ var FBSearch = {
 				html += "education: " + friend.latestEducation + "<br />";
 				html += friend.sex + ", " + friend.relationship_status + "<br />";
 				html += "age: " + friend.age + "<br />";
-				html += "location: " + friend.currentLocation;
+				html += "location: " + friend.currentLocation + "<br />";
+				html += "<span id='showphoto_" + friend.uid + "' class='showphoto'>写真を表示</span>";
+				html += "</div>";
 				html += "</div>";
 				html += "</li>";
 				ul.append(html);
+				
+				// show photo event
+				$("#showphoto_" + friend.uid).click(function(){
+					var uid = $(this).attr("id").split("_")[1];
+					var fql_photo = 'SELECT src, src_big FROM photo WHERE pid IN '
+							+ '(SELECT pid FROM photo_tag WHERE subject = ' + uid + ')';
+					var fql_uid = 'SELECT uid FROM user WHERE uid = ' + uid;
+					FB.api({
+						method: 'fql.multiquery',
+						queries: {
+							'photos': fql_photo,
+							'uid': fql_uid
+						}
+					}, function(response) {
+						var html = "<div class='friend_photo'>";
+						var photos = response[0].fql_result_set;
+
+						html += "<p>タグ付けされた写真：" + photos.length + "枚</p>";
+						for(var i = 0; i < photos.length; i ++){
+							html += "<a href='" + photos[i].src_big + "' target='_blank'>";
+							html += "<img class='friend_each_photo' src='" + photos[i].src + "' />";
+							html += "</a>";
+						}
+						html += "</div>";
+
+						var uid = response[1].fql_result_set[0].uid;
+						$("#friend" + uid).append(html);
+						$("#showphoto_" + uid).remove();
+					});
+				});
 				
 				FBSearch.showResultNum(FBSearch.friends.length);
 			}
@@ -180,11 +213,11 @@ var FBSearch = {
 				}
 			}
 			if(show){
-				$("#friend" + i).css("display", "block");
+				$("#friend" + friend.uid).css("display", "block");
 				resultNum ++;
 			}
 			else{
-				$("#friend" + i).css("display", "none");
+				$("#friend" + friend.uid).css("display", "none");
 			}
 		}
 		this.showResultNum(resultNum);

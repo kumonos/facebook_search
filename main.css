@@ -129,14 +129,12 @@ float:right;
 content
 ------------------------------------------------*/
 #header{
-	padding: 10px 0 10px 0;
-	width: 100%;
+	padding: 10px 20px 10px 20px;
 	background: #4660a2;
 }
 
 h1{
 	margin: 0 auto;
-	width: 920px;
 	color: #FFF;
 	font-weight: bold;
 	line-height: 24px;
@@ -154,7 +152,6 @@ h1{
 }
 
 #wrapper{
-	width: 920px;
 	margin: 0 auto;
 	padding: 20px;
 	border-left: solid 1px #ccc;
@@ -197,7 +194,6 @@ h2{
 	font-size: 20px;
 	padding: 15px 0;
 	margin: 15px auto 0 auto;
-	width: 300px;
 	text-align: center;
 }
 
@@ -242,4 +238,17 @@ h2{
 	margin:0;
 	padding:0;
 	cursor: pointer;
+}
+
+/*------------------------------------------------
+content (wide size)
+------------------------------------------------*/
+@media screen and (min-width : 920px) {
+	h1{
+		width: 920px;
+	}
+
+	#wrapper{
+		width: 920px;
+	}
 }

@@ -321,6 +321,9 @@ $(function(){
 
 	// bookmark event
 	$("#add_bookmark").click(function(){
+		var toURL = location.href;
+		var toStr = "who's who? | facebook友だち検索";
+		
 		if(navigator.userAgent.indexOf("MSIE") > -1){
 			//Internet Explorer
             window.external.AddFavorite(toURL,toStr);
@@ -338,7 +341,7 @@ $(function(){
             window.open(toURL,'sidebar','title='+toStr);
 		}else if(navigator.userAgent.indexOf("Chrome") > -1){
 			//Chrome,Safari
-            alert("ブラウザ付属のブックマーク機能をご利用ください。[Ctrl]と[D]ボタンを同時に押すと簡単にブックマークできます");
+            alert("ブラウザ付属のブックマーク機能をご利用ください。[Ctrl]と[D]ボタン（Macの場合は[Command]と[D]ボタン）を同時に押すと簡単にブックマークできます");
 		}else{
 			//その他
             alert("ブラウザ付属のブックマーク機能をご利用ください。");

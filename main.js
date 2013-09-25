@@ -19,16 +19,13 @@ var FBSearch = {
 			if(response.error){
 				$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
 			}
-			console.log(response);
 			FBSearch.friend_count = response.data[0].friend_count;
 			var limit = 100;
 			var loop_num = Math.ceil(FBSearch.friend_count / limit);
 			var current_response = 0;
-			console.log("count is " + FBSearch.friend_count);
 
 			FBSearch.friends = new Array();
 			for(loop = 0; loop < loop_num; loop ++){
-				console.log("loop " + loop);
 				fql = 'SELECT uid, name, pic, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
 				fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me() LIMIT ' + limit + ' OFFSET ' + limit * loop + ')';
 				FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {

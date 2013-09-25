@@ -14,74 +14,92 @@ var FBSearch = {
 	filter: {},
 	init: function(){
 		$("#friends").text("読み込み中...");
-		var fql = 'SELECT uid, name, pic, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
-		fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
+		var fql = 'SELECT friend_count FROM user WHERE uid = me()';
 		FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
-			$("#friends").text("");
 			if(response.error){
 				$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
 			}
-			FBSearch.friends = response.data;
-			var ul = $("#friends");
-			for(var i = 0; i < FBSearch.friends.length; i ++){
-				var friend = FBSearch.friends[i];
-				// set each data
-				friend.latestEmployer = FBSearch.getLatestEmployer(i);
-				friend.latestEducation = FBSearch.getLatestEducation(i);
-				friend.age = FBSearch.getAge(i);
-				friend.currentLocation = FBSearch.getCurrentLocation(i);
+			console.log(response);
+			FBSearch.friend_count = response.data[0].friend_count;
+			var limit = 100;
+			var loop_num = Math.ceil(FBSearch.friend_count / limit);
+			var current_response = 0;
+			console.log("count is " + FBSearch.friend_count);
 
-				// make view html
-				var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
-				html += "<div class='clearfix'>";
-				html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
-				html += "<div class='friend_info'>";
-				html += "<input type='checkbox' name='check' id='list' class='list_func' value='list_add' checked /> ";
-				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
-				html += " work at " + friend.latestEmployer + "<br />";
-				html += "education: " + friend.latestEducation + "<br />";
-				html += friend.sex + ", " + friend.relationship_status + "<br />";
-				html += "age: " + friend.age + "<br />";
-				html += "location: " + friend.currentLocation + "<br />";
-				html += "<span id='showphoto_" + friend.uid + "' class='showphoto'>写真を表示</span>";
-				html += "</div>";
-				html += "</div>";
-				html += "</li>";
-				ul.append(html);
-				
-				// show photo event
-				$("#showphoto_" + friend.uid).click(function(){
-					var uid = $(this).attr("id").split("_")[1];
-					var fql_photo = 'SELECT src, src_big FROM photo WHERE pid IN '
-							+ '(SELECT pid FROM photo_tag WHERE subject = ' + uid + ')';
-					var fql_uid = 'SELECT uid FROM user WHERE uid = ' + uid;
-					FB.api({
-						method: 'fql.multiquery',
-						queries: {
-							'photos': fql_photo,
-							'uid': fql_uid
+			FBSearch.friends = new Array();
+			for(loop = 0; loop < loop_num; loop ++){
+				console.log("loop " + loop);
+				fql = 'SELECT uid, name, pic, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
+				fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me() LIMIT ' + limit + ' OFFSET ' + limit * loop + ')';
+				FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
+					if(response.error){
+						$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
+					}
+					current_response ++;
+					FBSearch.friends = FBSearch.friends.concat(response.data);
+					if(current_response == loop_num){
+						$("#friends").text("");
+						var ul = $("#friends");
+						for(var i = 0; i < FBSearch.friends.length; i ++){
+							var friend = FBSearch.friends[i];
+							// set each data
+							friend.latestEmployer = FBSearch.getLatestEmployer(i);
+							friend.latestEducation = FBSearch.getLatestEducation(i);
+							friend.age = FBSearch.getAge(i);
+							friend.currentLocation = FBSearch.getCurrentLocation(i);
+
+							// make view html
+							var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
+							html += "<div class='clearfix'>";
+							html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
+							html += "<div class='friend_info'>";
+							html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
+							html += " work at " + friend.latestEmployer + "<br />";
+							html += "education: " + friend.latestEducation + "<br />";
+							html += friend.sex + ", " + friend.relationship_status + "<br />";
+							html += "age: " + friend.age + "<br />";
+							html += "location: " + friend.currentLocation + "<br />";
+							html += "<span id='showphoto_" + friend.uid + "' class='showphoto'>写真を表示</span>";
+							html += "</div>";
+							html += "</div>";
+							html += "</li>";
+							ul.append(html);
+							
+							// show photo event
+							$("#showphoto_" + friend.uid).click(function(){
+								var uid = $(this).attr("id").split("_")[1];
+								var fql_photo = 'SELECT src, src_big FROM photo WHERE pid IN '
+										+ '(SELECT pid FROM photo_tag WHERE subject = ' + uid + ')';
+								var fql_uid = 'SELECT uid FROM user WHERE uid = ' + uid;
+								FB.api({
+									method: 'fql.multiquery',
+									queries: {
+										'photos': fql_photo,
+										'uid': fql_uid
+									}
+								}, function(response) {
+									var html = "<div class='friend_photo'>";
+									var photos = response[0].fql_result_set;
+
+									html += "<p>タグ付けされた写真：" + photos.length + "枚</p>";
+									for(var i = 0; i < photos.length; i ++){
+										html += "<a href='" + photos[i].src_big + "' target='_blank'>";
+										html += "<img class='friend_each_photo' src='" + photos[i].src + "' />";
+										html += "</a>";
+									}
+									html += "</div>";
+
+									var uid = response[1].fql_result_set[0].uid;
+									$("#friend" + uid).append(html);
+									$("#showphoto_" + uid).remove();
+								});
+							});
 						}
-					}, function(response) {
-						var html = "<div class='friend_photo'>";
-						var photos = response[0].fql_result_set;
-
-						html += "<p>タグ付けされた写真：" + photos.length + "枚</p>";
-						for(var i = 0; i < photos.length; i ++){
-							html += "<a href='" + photos[i].src_big + "' target='_blank'>";
-							html += "<img class='friend_each_photo' src='" + photos[i].src + "' />";
-							html += "</a>";
-						}
-						html += "</div>";
-
-						var uid = response[1].fql_result_set[0].uid;
-						$("#friend" + uid).append(html);
-						$("#showphoto_" + uid).remove();
-					});
+						FBSearch.showResultNum(FBSearch.friends.length);
+						$("#search_boxes").css("display", "block");
+					}
 				});
-				
-				FBSearch.showResultNum(FBSearch.friends.length);
 			}
-			$("#search_boxes").css("display", "block");
 		});
 	},
 	getLatestEmployer: function(friendIndex){

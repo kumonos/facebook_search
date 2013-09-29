@@ -18,6 +18,7 @@ var FBSearch = {
 		FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
 			if(response.error){
 				$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
+				FBSearch.errorLog(1, response);
 			}
 			FBSearch.friend_count = response.data[0].friend_count;
 			var limit = 100;
@@ -31,6 +32,8 @@ var FBSearch = {
 				FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
 					if(response.error){
 						$("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
+						FBSearch.errorLog(2, response);
+						return;
 					}
 					current_response ++;
 					FBSearch.friends = FBSearch.friends.concat(response.data);
@@ -75,6 +78,10 @@ var FBSearch = {
 										'uid': fql_uid
 									}
 								}, function(response) {
+									if(response.error){
+										FBSearch.errorLog(3, response);
+										return;
+									}
 									var html = "<div class='friend_photo'>";
 									var photos = response[0].fql_result_set;
 
@@ -257,6 +264,22 @@ var FBSearch = {
 				data = "";
 			}
 			return data;
+		}
+	},
+	errorLog: function(appErrorCode, response){
+		var error = response.error;
+		if(error){
+			$.get(
+				"/facebook_search",
+				{
+					action: "errorLog",
+					appCode: appErrorCode,
+					message: encodeURI(error.message),
+					type: error.type,
+					code: error.code,
+					subcode: error.error_subcode
+				}
+			);
 		}
 	}
 };

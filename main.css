@@ -201,6 +201,10 @@ h2{
 	text-align: center;
 }
 
+#ad{
+	margin: 10px 0 0 0;
+}
+
 #search_main{
 	display: none;
 }

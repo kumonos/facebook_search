@@ -186,6 +186,10 @@ h2{
 	margin: 10px 0 0 0;
 }
 
+.fb-like{
+	margin: 0 0 3px 0;
+}
+
 #use_button{
 	cursor: pointer;
 	background: #4660a2;

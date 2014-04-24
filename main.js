@@ -2,7 +2,7 @@ window.fbAsyncInit = function() {
     // init the FB JS SDK
     FB.init({
 		appId      : '489296474470878', // App ID from the App Dashboard
-		channelUrl : '//www.muratayusuke.com/facebook_search/channel.php', // Channel File for x-domain communication
+		channelUrl : 'http://kumonos/facebook_search/channel.php', // Channel File for x-domain communication
 		status     : true, // check the login status upon init?
 		cookie     : true, // set sessions cookies to allow your server to access the session?
 		xfbml      : true  // parse XFBML tags on this page?
@@ -36,6 +36,7 @@ var FBSearch = {
 				html += "<div class='clearfix'>";
 				html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
 				html += "<div class='friend_info'>";
+				html += "<input type='checkbox' name='check' id='list' class='list_func' value='list_add' checked /> ";
 				html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
 				html += " work at " + friend.latestEmployer + "<br />";
 				html += "education: " + friend.latestEducation + "<br />";
@@ -346,5 +347,87 @@ $(function(){
 			//その他
             alert("ブラウザ付属のブックマーク機能をご利用ください。");
 		}
+	});
+
+
+	//all check box
+	$('#all_check_button').on('change',function(){
+		$('input[name=check]').prop('checked',this.checked);
+	});
+
+	//list function
+	$("#list_button").click(function(){
+		var html ="";
+		var l = 0;
+		memberlist = new Array();
+
+		//definition list name 
+		var listname = document.listname_form.listname_text.value;
+		if(listname==""){
+			alert("リスト・グループ名が空です");
+			return false;
+		};
+
+		for(var i = 0; i < FBSearch.friends.length; i ++){			
+		var id='friend' + FBSearch.friends[i].uid;
+		var childs = document.getElementById(id).childNodes[0].childNodes[1].childNodes[0].checked;
+		var disp = document.getElementById(id).style.display;
+
+			if((childs)&(disp!="none")){
+			   html +=  FBSearch.friends[i].name+":"+FBSearch.friends[i].uid+"<br />";
+			   memberlist[l] = FBSearch.friends[i].uid;
+			   l = l + 1;
+			};
+		}
+
+		//no check
+		if(l == 0){
+			alert("友達が一人もチェックされていません。");
+			return false;
+		};
+		
+		alert("友達リストが作成されるまで少々お待ちください");
+
+		FB.login(function(response) {
+		   　if (response.authResponse) {
+
+				//make list
+				FB.api(
+		  			"/me/friendlists",
+		  		  	"POST",
+				    {
+				        "name": listname
+				    },
+		  			function(list) {
+						
+		      			if(list && !list.error){
+		        			// update mamber list
+
+							FB.api(
+							    "/"+list.id+"/members",
+							    "POST",
+		    					{
+		            				"members":memberlist
+							    },
+								function (memberresponse) {
+						   			if (memberresponse && !memberresponse.error) {
+					        		//* handle the result 
+					        			alert(listname+"という名前で友人リストを作成しました");
+					      			}
+						    	}
+							);
+							
+			    		} else {
+			    			if(list.error.code ==100)alert("同じ名前のリストが存在します。");
+			    		}
+		    		}	
+				);
+
+			} else {
+				alert("友達リストへのアクセスを許可してください。");
+		　  }
+		 },
+		 {scope: 'user_friends,manage_friendlists,read_friendlists'}
+		);
 	});
 });

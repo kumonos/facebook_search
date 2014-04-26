@@ -190,7 +190,7 @@ h2{
 	margin: 0 0 3px 0;
 }
 
-#use_button{
+#use_button,#list_button{
 	cursor: pointer;
 	background: #4660a2;
 	color: #fff;

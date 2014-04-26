@@ -186,6 +186,10 @@ h2{
 	margin: 10px 0 0 0;
 }
 
+.fb-like{
+	margin: 0 0 3px 0;
+}
+
 #use_button{
 	cursor: pointer;
 	background: #4660a2;
@@ -195,6 +199,10 @@ h2{
 	padding: 15px 0;
 	margin: 15px auto 0 auto;
 	text-align: center;
+}
+
+#ad{
+	margin: 10px 0 0 0;
 }
 
 #search_main{

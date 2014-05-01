@@ -53,6 +53,7 @@ var FBSearch = {
 							html += "<div class='clearfix'>";
 							html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
 							html += "<div class='friend_info'>";
+							html += "<input type='checkbox' name='check' id='list' class='list_func' value='list_add' checked /> ";
 							html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
 							html += " work at " + friend.latestEmployer + "<br />";
 							html += "education: " + friend.latestEducation + "<br />";

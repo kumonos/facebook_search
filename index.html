@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>Who's who</title>
+<title>Who's who (フーズフー) | facebook友達検索</title>)
 
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
@@ -16,7 +16,7 @@
 <div id="fb-root"></div>
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="main.js"></script>
-<div id="header"><h1>Who's who<span id="header_copy">powered by <a id="kumonos_link" href="http://kumonos.jp" target="_blank">Kumonos</a></span></h1></div>
+<div id="header"><h1>Who's who (フーズフー) | facebook友達検索<span id="header_copy">powered by <a id="kumonos_link" href="http://kumonos.jp" target="_blank">Kumonos</a></span></h1></div>
 <div id="wrapper">
 <div id="description">
 	<h2>これは何？</h2>
@@ -31,9 +31,23 @@
 
 	<button id="add_bookmark">お気に入りに登録</button>
 	<div id="social_buttons" class="clearfix">
-		<div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false"></div>
-		<div><a href="https://twitter.com/share" class="twitter-share-button" data-text="facebook友達検索" data-lang="ja">ツイート</a></div>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      <div class="social_button twitter_button">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-count="vertical">Tweet</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      </div>
+
+      <div class="social_button">
+        <div class="fb-share-button" data-layout="box_count"></div>
+      </div>
+
+      <div class="social_button">
+	    <a class="hatena-bookmark-button" data-hatena-bookmark-layout="vertical-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+      </div>
+
+      <div class="social_button">
+	    <a data-pocket-label="pocket" data-pocket-count="vertical" class="pocket-btn" data-lang="en"></a>
+        <script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+      </div>
 	</div>
 </div>
 

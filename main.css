@@ -186,6 +186,11 @@ h2{
 	margin: 10px 0 0 0;
 }
 
+.social_button {
+    float: left;
+    margin-right: 10px;
+}
+
 .fb-like{
 	margin: 0 0 3px 0;
 }

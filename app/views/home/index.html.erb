@@ -58,7 +58,9 @@
 	※ログイン＆アプリ承認に成功すると、ポップアップが閉じて友達リストの読み込みが始まります。友達リストが表示されるまで少々お待ちください。<br />
 	※友達リストが表示されたら自由に検索してください。
 	</p>
-	<div id="use_button">友達を検索する</div>
+    <% unless current_user %>
+	<div><a href="auth/facebook" id="use_button">友達を検索する</a></div>>
+    <% end %>
 	<div id="ad">
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!-- facebook search responsive -->
@@ -74,6 +76,7 @@
 </div>
 <div id="search_main">
 	<h2>検索</h2>
+    <div><a href="logout">ログアウト</a></div>
 	<div id="search_boxes">
 		<table>
 			<tr>

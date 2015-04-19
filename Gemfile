@@ -50,6 +50,7 @@ gem 'whenever', require: false
 gem 'mtracker'
 gem 'meta-tags'
 gem 'unicorn-rails'
+gem 'omniauth-facebook'
 group :assets do
   gem 'bourbon'
   gem 'neat'

@@ -51,6 +51,7 @@ gem 'mtracker'
 gem 'meta-tags'
 gem 'unicorn-rails'
 gem 'omniauth-facebook'
+gem 'koala'
 group :assets do
   gem 'bourbon'
   gem 'neat'

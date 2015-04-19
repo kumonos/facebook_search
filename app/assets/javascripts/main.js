@@ -282,6 +282,39 @@ var FBSearch = {
         }
       );
     }
+  },
+
+  // promises
+  getFriendsCount: function(){
+    return new Promise(function(resolve, reject){
+      $.ajax({
+        url: "friends/fb_count.json",
+        dataType: 'json',
+        success: function(data){
+          console.log(data.friend_count);
+          resolve(data.friend_count);
+        },
+        error: function(error){
+          reject(error);
+        }
+      });
+    });
+  },
+
+  getFriends: function(limit, offset){
+    return new Promise(function(resolve, reject){
+      $.ajax({
+        url: "friends/fb.json?limit=" + limit + "&offset=" + offset,
+        dataType: 'json',
+        success: function(data){
+          console.log(data);
+          resolve(data);
+        },
+        error: function(error){
+          reject(error);
+        }
+      });
+    });
   }
 };
 
@@ -301,17 +334,14 @@ var FBSearch = {
 
 // events
 $(function(){
-  // start to use
-  $("#use_button").click(function(){
-    $("#search_main").css("display", "block");
-    $(this).css("display", "none");
-    FB.login(function(response) {
-      if (response.authResponse) {
-        FBSearch.init();
-      } else {
-        $("#friends").text("友達リストの読み込みに失敗しました。ページをリロードして下さい。");
-      }
-    }, {scope:'friends_work_history,friends_relationships,friends_birthday,friends_education_history,friends_hometown,friends_location,friends_photos'});
+  // start point
+  $("#search_main").css("display", "block");
+  $(this).css("display", "none");
+  $("#friends").text("読み込み中...");
+  FBSearch.getFriendsCount().then(function(count){
+    return FBSearch.getFriends(10, 0);
+  }).then(function(friends){
+    console.log(friends);
   });
   
   // search event

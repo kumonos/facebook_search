@@ -11,7 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150419105117) do
+ActiveRecord::Schema.define(version: 20150419145610) do
+
+  create_table "friends", force: :cascade do |t|
+    t.string   "uid"
+    t.string   "name"
+    t.string   "pic"
+    t.string   "profile_url"
+    t.string   "sex"
+    t.string   "education"
+    t.string   "work"
+    t.string   "birthday_date"
+    t.string   "relationship_status"
+    t.string   "current_location"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "owner_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "provider"

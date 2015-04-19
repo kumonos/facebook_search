@@ -1,0 +1,15 @@
+AllCops:
+  Exclude:
+    - bin/**/*
+    - tmp/**/*
+    - vendor/**/*
+    - db/schema.rb
+
+Documentation:
+  Enabled: false
+
+LineLength:
+  Max: 115
+
+Metrics/AbcSize:
+  Enabled: false

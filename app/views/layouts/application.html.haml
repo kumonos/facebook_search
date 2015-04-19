@@ -1,0 +1,27 @@
+!!! 5
+%html
+  %head
+    = display_meta_tags charaset: 'utf-8'
+    - title = 'your site title'
+    - description = 'your site description'
+    - url = 'http://your-site-url'
+    - site_name = 'your site name'
+    %title= title
+    = display_meta_tags viewport: 'width=device-width,initial-scale=1.0',
+        description: description,
+        fb: {app_id: 'your-fb-app-id'},
+        og: {type: 'website',
+          title: title,
+          description: description,
+          site_name: 'your site name',
+          url: url,
+          image: url + asset_path('logo.png')}
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+  %body
+    #header
+      #header_in
+        %a{href: '/'}
+          = site_name
+    #content
+      = yield
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: 'home#index'
   get 'logout', to: 'sessions#destroy', as: 'logout'
+  get 'friends' => 'friends#index'
   get 'friends/fb'
   get 'friends/fb_count'
 

@@ -225,16 +225,16 @@ h2{
 }
 
 .friends_li{
-	margin: 0 0 10px 0;
+  margin: 0 0 10px 0;
+  @include display(flex);
 }
 
 .friend_img{
 	margin: 0 10px 0 0;
-	float: left;
 }
 
 .friend_info{
-	float: left;
+  @include calc(width, '100% - 110px');
 }
 	
 .showphoto {

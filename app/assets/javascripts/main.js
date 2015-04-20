@@ -1,128 +1,71 @@
-window.fbAsyncInit = function() {
-  // init the FB JS SDK
-  FB.init({
-    appId      : '489296474470878', // App ID from the App Dashboard
-    channelUrl : 'http://kumonos/facebook_search/channel.php', // Channel File for x-domain communication
-    status     : true, // check the login status upon init?
-    cookie     : true, // set sessions cookies to allow your server to access the session?
-    xfbml      : true  // parse XFBML tags on this page?
-  });
-};
-
 var FBSearch = {
   friends: [],
   filter: {},
-  init: function(){
-    $("#friends").text("読み込み中...");
-    var fql = 'SELECT friend_count FROM user WHERE uid = me()';
-    FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
-      if(response.error){
-        $("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
-        FBSearch.errorLog(1, response);
-      }
-      FBSearch.friend_count = response.data[0].friend_count;
-      var limit = 100;
-      var loop_num = Math.ceil(FBSearch.friend_count / limit);
-      var current_response = 0;
 
-      FBSearch.friends = new Array();
-      for(loop = 0; loop < loop_num; loop ++){
-        fql = 'SELECT uid, name, pic, profile_url, sex, education, work, birthday_date, relationship_status, current_location FROM user';
-        fql += ' WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me() LIMIT ' + limit + ' OFFSET ' + limit * loop + ')';
-        FB.api('/fql', {q:fql, locale:"ja_JP"}, function(response) {
+  buildHtml: function(){
+    $("#friends").text("");
+    var ul = $("#friends");
+    for(var i = 0; i < FBSearch.friends.length; i ++){
+      var friend = FBSearch.friends[i];
+      // set each data
+      friend.age = FBSearch.getAge(i);
+
+      // make view html
+      var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
+      html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
+      html += "<div class='friend_info'>";
+      html += "<input type='checkbox' name='check' id='list' class='list_func' value='list_add' checked /> ";
+      html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
+      html += " work at " + friend.work + "<br />";
+      html += "education: " + friend.education + "<br />";
+      html += friend.sex + ", " + friend.relationship_status + "<br />";
+      html += "age: " + friend.age + "<br />";
+      html += "location: " + friend.current_location + "<br />";
+      //html += "<span id='showphoto_" + friend.uid + "' class='showphoto'>写真を表示</span>";
+      html += "</div>";
+      html += "</li>";
+      ul.append(html);
+      
+      // show photo event
+      /*
+      $("#showphoto_" + friend.uid).click(function(){
+        var uid = $(this).attr("id").split("_")[1];
+        var fql_photo = 'SELECT src, src_big FROM photo WHERE pid IN '
+              + '(SELECT pid FROM photo_tag WHERE subject = ' + uid + ')';
+        var fql_uid = 'SELECT uid FROM user WHERE uid = ' + uid;
+        FB.api({
+          method: 'fql.multiquery',
+          queries: {
+            'photos': fql_photo,
+            'uid': fql_uid
+          }
+        }, function(response) {
           if(response.error){
-            $("#friends").text("読み込みに失敗しました。ページをリロードして下さい。");
-            FBSearch.errorLog(2, response);
+            FBSearch.errorLog(3, response);
             return;
           }
-          current_response ++;
-          FBSearch.friends = FBSearch.friends.concat(response.data);
-          if(current_response == loop_num){
-            $("#friends").text("");
-            var ul = $("#friends");
-            for(var i = 0; i < FBSearch.friends.length; i ++){
-              var friend = FBSearch.friends[i];
-              // set each data
-              friend.latestEmployer = FBSearch.getLatestEmployer(i);
-              friend.latestEducation = FBSearch.getLatestEducation(i);
-              friend.age = FBSearch.getAge(i);
-              friend.currentLocation = FBSearch.getCurrentLocation(i);
+          var html = "<div class='friend_photo'>";
+          var photos = response[0].fql_result_set;
 
-              // make view html
-              var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
-              html += "<div class='clearfix'>";
-              html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
-              html += "<div class='friend_info'>";
-              html += "<input type='checkbox' name='check' id='list' class='list_func' value='list_add' checked /> ";
-              html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
-              html += " work at " + friend.latestEmployer + "<br />";
-              html += "education: " + friend.latestEducation + "<br />";
-              html += friend.sex + ", " + friend.relationship_status + "<br />";
-              html += "age: " + friend.age + "<br />";
-              html += "location: " + friend.currentLocation + "<br />";
-              html += "<span id='showphoto_" + friend.uid + "' class='showphoto'>写真を表示</span>";
-              html += "</div>";
-              html += "</div>";
-              html += "</li>";
-              ul.append(html);
-              
-              // show photo event
-              $("#showphoto_" + friend.uid).click(function(){
-                var uid = $(this).attr("id").split("_")[1];
-                var fql_photo = 'SELECT src, src_big FROM photo WHERE pid IN '
-                      + '(SELECT pid FROM photo_tag WHERE subject = ' + uid + ')';
-                var fql_uid = 'SELECT uid FROM user WHERE uid = ' + uid;
-                FB.api({
-                  method: 'fql.multiquery',
-                  queries: {
-                    'photos': fql_photo,
-                    'uid': fql_uid
-                  }
-                }, function(response) {
-                  if(response.error){
-                    FBSearch.errorLog(3, response);
-                    return;
-                  }
-                  var html = "<div class='friend_photo'>";
-                  var photos = response[0].fql_result_set;
-
-                  html += "<p>タグ付けされた写真：" + photos.length + "枚</p>";
-                  for(var i = 0; i < photos.length; i ++){
-                    html += "<a href='" + photos[i].src_big + "' target='_blank'>";
-                    html += "<img class='friend_each_photo' src='" + photos[i].src + "' />";
-                    html += "</a>";
-                  }
-                  html += "</div>";
-
-                  var uid = response[1].fql_result_set[0].uid;
-                  $("#friend" + uid).append(html);
-                  $("#showphoto_" + uid).remove();
-                });
-              });
-            }
-            FBSearch.showResultNum(FBSearch.friends.length);
-            $("#search_boxes").css("display", "block");
+          html += "<p>タグ付けされた写真：" + photos.length + "枚</p>";
+          for(var i = 0; i < photos.length; i ++){
+            html += "<a href='" + photos[i].src_big + "' target='_blank'>";
+            html += "<img class='friend_each_photo' src='" + photos[i].src + "' />";
+            html += "</a>";
           }
+          html += "</div>";
+
+          var uid = response[1].fql_result_set[0].uid;
+          $("#friend" + uid).append(html);
+          $("#showphoto_" + uid).remove();
         });
-      }
-    });
-  },
-  getLatestEmployer: function(friendIndex){
-    var employer = "";
-    var friend = this.friends[friendIndex];
-    if(friend.work.length > 0){
-      employer = friend.work[0].employer.name;
+      });
+       */
     }
-    return employer;
+    FBSearch.showResultNum(FBSearch.friends.length);
+    $("#search_boxes").css("display", "block");
   },
-  getLatestEducation: function(friendIndex){
-    var school = "";
-    var friend = this.friends[friendIndex];
-    if(friend.education.length > 0){
-      school = friend.education[friend.education.length - 1].school.name;
-    }
-    return school;
-  },
+
   getAge: function(friendIndex){
     var age = "";
     var friend = this.friends[friendIndex];
@@ -143,15 +86,7 @@ var FBSearch = {
     age = Math.floor((today - birthday) / 10000);
     return age;
   },
-  getCurrentLocation: function(friendIndex){
-    var location = "";
-    var friend = this.friends[friendIndex];
-    var locationObject = friend.current_location;
-    if(locationObject){
-      location = locationObject.name;
-    }
-    return location;
-  },
+
   filterResults: function(param){
     // set default param
     if(typeof param === "undefined"){
@@ -207,7 +142,7 @@ var FBSearch = {
             }
           }
           else{
-            if(key == "latestEmployer" || key == "latestEducation" || key == "currentLocation" || key == "name"){
+            if(key == "work" || key == "education" || key == "current_location" || key == "name"){
               // 部分一致
               targetData = targetData.toLowerCase();
               query = query.toLowerCase();
@@ -237,7 +172,7 @@ var FBSearch = {
         }
       }
       if(show){
-        $("#friend" + friend.uid).css("display", "block");
+        $("#friend" + friend.uid).css("display", "flex");
         resultNum ++;
       }
       else{
@@ -285,13 +220,27 @@ var FBSearch = {
   },
 
   // promises
-  getFriendsCount: function(){
+  getFriends: function(){
+    return new Promise(function(resolve, reject){
+      $.ajax({
+        url: "friends.json",
+        dataType: 'json',
+        success: function(data){
+          resolve(data);
+        },
+        error: function(error){
+          reject(error);
+        }
+      });
+    });
+  },
+
+  getFBFriendsCount: function(){
     return new Promise(function(resolve, reject){
       $.ajax({
         url: "friends/fb_count.json",
         dataType: 'json',
         success: function(data){
-          console.log(data.friend_count);
           resolve(data.friend_count);
         },
         error: function(error){
@@ -301,13 +250,12 @@ var FBSearch = {
     });
   },
 
-  getFriends: function(limit, offset){
+  getFBFriends: function(limit, offset){
     return new Promise(function(resolve, reject){
       $.ajax({
         url: "friends/fb.json?limit=" + limit + "&offset=" + offset,
         dataType: 'json',
         success: function(data){
-          console.log(data);
           resolve(data);
         },
         error: function(error){
@@ -319,31 +267,30 @@ var FBSearch = {
 };
 
 
-// Load the SDK's source Asynchronously
-// Note that the debug version is being actively developed and might 
-// contain some type checks that are overly strict. 
-// Please report such bugs using the bugs tool.
-(function(d, debug){
-  var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement('script'); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/ja_JP/all" + (debug ? "/debug" : "") + ".js";
-  ref.parentNode.insertBefore(js, ref);
-}(document, /*debug*/ false));
-
-
 // events
 $(function(){
   // start point
   $("#search_main").css("display", "block");
   $(this).css("display", "none");
   $("#friends").text("読み込み中...");
-  FBSearch.getFriendsCount().then(function(count){
-    return FBSearch.getFriends(10, 0);
+  FBSearch.getFBFriendsCount().then(function(count){
+    var limit = 100;
+    var loop_num = Math.ceil(count / limit);
+    var current_response = 0;
+
+    var promises = [];
+    for(var i = 0; i < loop_num; i ++){
+      promises.push(FBSearch.getFBFriends(limit, limit * i));
+    }
+
+    return Promise.all(promises);
+  }).then(function(){
+    return FBSearch.getFriends();
   }).then(function(friends){
-    console.log(friends);
+    FBSearch.friends = friends;
+    FBSearch.buildHtml();
   });
-  
+
   // search event
   $("#name").keyup(function(e){
     var query = $(this).val();
@@ -352,17 +299,17 @@ $(function(){
 
   $("#employer").keyup(function(e){
     var query = $(this).val();
-    FBSearch.filterResults({target: "latestEmployer", query: query});
+    FBSearch.filterResults({target: "work", query: query});
   });
 
   $("#education").keyup(function(e){
     var query = $(this).val();
-    FBSearch.filterResults({target: "latestEducation", query: query});
+    FBSearch.filterResults({target: "education", query: query});
   });
 
   $("#currentLocation").keyup(function(e){
     var query = $(this).val();
-    FBSearch.filterResults({target: "currentLocation", query: query});
+    FBSearch.filterResults({target: "current_location", query: query});
   });
 
   $("#age_min").keyup(function(){

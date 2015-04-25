@@ -65,5 +65,5 @@ group :deployment do
   gem 'capistrano-rails', require: false
   gem 'capistrano-rbenv', require: false
   gem 'capistrano3-unicorn', require: false
-  gem 'cap-ec2', require: false
+  gem 'capistrano-scm-gitcopy', require: false
 end

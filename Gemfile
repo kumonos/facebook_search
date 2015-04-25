@@ -55,6 +55,8 @@ gem 'meta-tags'
 gem 'unicorn-rails'
 gem 'omniauth-facebook'
 gem 'koala'
+gem 'mysql2'
+
 group :assets do
   gem 'bourbon'
   gem 'neat'

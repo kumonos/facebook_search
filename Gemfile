@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -33,32 +31,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-
-  # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-end
-
-
-gem 'haml-rails'
-gem 'dotenv-rails'
-gem 'whenever', require: false
-gem 'mtracker'
-gem 'meta-tags'
-gem 'unicorn-rails'
-gem 'omniauth-facebook'
-gem 'koala'
-group :assets do
-  gem 'bourbon'
-  gem 'neat'
-  gem 'bitters'
-end
-
-group :deployment do
+  gem 'sqlite3'
   gem 'pry-rails'
   gem 'guard-rails'
   gem 'guard-unicorn', '>= 0.1.3'
@@ -73,4 +49,18 @@ group :deployment do
   gem 'capistrano-rbenv', require: false
   gem 'capistrano3-unicorn', require: false
   gem 'cap-ec2', require: false
+end
+
+gem 'haml-rails'
+gem 'dotenv-rails'
+gem 'whenever', require: false
+gem 'mtracker'
+gem 'meta-tags'
+gem 'unicorn-rails'
+gem 'omniauth-facebook'
+gem 'koala'
+group :assets do
+  gem 'bourbon'
+  gem 'neat'
+  gem 'bitters'
 end

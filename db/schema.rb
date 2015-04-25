@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150419145610) do
+ActiveRecord::Schema.define(version: 20150425193608) do
 
   create_table "friends", force: :cascade do |t|
     t.string   "uid"
@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 20150419145610) do
     t.string   "pic"
     t.string   "profile_url"
     t.string   "sex"
-    t.string   "education"
-    t.string   "work"
+    t.text     "education"
+    t.text     "work"
     t.string   "birthday_date"
     t.string   "relationship_status"
     t.string   "current_location"

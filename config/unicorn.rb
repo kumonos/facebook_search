@@ -1,22 +1,28 @@
 # -*- coding: utf-8 -*-
 
 env = ENV['RAILS_ENV']
+app_name = 'whoswho'
 
 if env == 'production'
-  worker_processes 8
+  worker_processes 4
 else
   worker_processes 2
 end
 
 # socket
-listen 3000
-listen '/tmp/facebook_search_unicorn.sock'
-pid '/tmp/facebook_search_unicorn.pid'
+listen 3333
+if env == 'production'
+  listen "/apps/#{app_name}/tmp/unicorn.sock"
+  pid "/apps/#{app_name}/tmp/unicorn.pid"
+else
+  listen File.expand_path("../../tmp/sockets/unicorn_#{env}.sock", __FILE__)
+  pid File.expand_path("../../tmp/pids/unicorn_#{env}.pid", __FILE__)
+end
 
 # logs
 if env == 'production'
-  stderr_path '/var/log/facebook_search/unicorn.log'
-  stdout_path '/var/log/facebook_search/unicorn.log'
+  stderr_path "/var/log/#{app_name}/unicorn.log"
+  stdout_path "/var/log/#{app_name}/unicorn.log"
 else
   stderr_path File.expand_path("../../log/unicorn_#{env}.log", __FILE__)
   stdout_path File.expand_path("../../log/unicorn_#{env}.log", __FILE__)

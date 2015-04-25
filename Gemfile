@@ -45,10 +45,6 @@ group :development, :test do
   gem 'rubocop'
   gem 'rails_best_practices'
   gem 'bullet'
-  gem 'capistrano-rails', require: false
-  gem 'capistrano-rbenv', require: false
-  gem 'capistrano3-unicorn', require: false
-  gem 'cap-ec2', require: false
 end
 
 gem 'haml-rails'
@@ -63,4 +59,11 @@ group :assets do
   gem 'bourbon'
   gem 'neat'
   gem 'bitters'
+end
+
+group :deployment do
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rbenv', require: false
+  gem 'capistrano3-unicorn', require: false
+  gem 'cap-ec2', require: false
 end

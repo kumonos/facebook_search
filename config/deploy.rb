@@ -23,8 +23,8 @@ set :linked_files, %w(.env)
 set :unicorn_rack_env, 'production'
 
 # set up whenever
-# set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
-# set :whenever_roles, :app
+set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
+set :whenever_roles, :app
 
 # add restart task
 namespace :deploy do

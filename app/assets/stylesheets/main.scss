@@ -25,15 +25,10 @@ padding:0;
 
 *:first-child+html img {vertical-align: bottom;}
 
-*html img {vertical-align: bottom;}
-
 *:first-child+html body{
 padding-left:1px;
 }
 
-*html body{
-padding-left: 1px;
-}
 *+html body{
 padding-left: 1px;
 }
@@ -158,6 +153,10 @@ h1{
 	border-right: solid 1px #ccc;
 }
 
+#logout {
+  margin-bottom: 20px;
+}
+
 h2{
 	margin: 0px 0 10px 0;
 	padding: 5px;
@@ -204,6 +203,7 @@ h2{
 	padding: 15px 0;
 	margin: 15px auto 0 auto;
 	text-align: center;
+    display: block;
 }
 
 #ad{
@@ -225,16 +225,16 @@ h2{
 }
 
 .friends_li{
-	margin: 0 0 10px 0;
+  margin: 0 0 10px 0;
+  @include display(flex);
 }
 
 .friend_img{
 	margin: 0 10px 0 0;
-	float: left;
 }
 
 .friend_info{
-	float: left;
+  @include calc(width, '100% - 110px');
 }
 	
 .showphoto {

@@ -9,16 +9,15 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <meta name="robots" content="INDEX,FOLLOW" />
 <meta name="viewport" content="width=device-width ">
-<link href="main.css" rel="stylesheet" type="text/css" media="all">
+<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true%>
 </head>
 
 <body>
 <div id="fb-root"></div>
-<script type="text/javascript" src="jquery.min.js"></script>
-<script type="text/javascript" src="main.js"></script>
 <div id="header"><h1>Who's who (フーズフー) | facebook友達検索<span id="header_copy">powered by <a id="kumonos_link" href="http://kumonos.jp" target="_blank">Kumonos</a></span></h1></div>
 <div id="wrapper">
 <div id="description">
+    <div id="logout"><a href="logout">ログアウト</a></div>
 	<h2>これは何？</h2>
 	<p>facebookを使っていて、こんなときありませんか？</p>
 	<ul id="description_ul">
@@ -58,7 +57,9 @@
 	※ログイン＆アプリ承認に成功すると、ポップアップが閉じて友達リストの読み込みが始まります。友達リストが表示されるまで少々お待ちください。<br />
 	※友達リストが表示されたら自由に検索してください。
 	</p>
-	<div id="use_button">友達を検索する</div>
+    <% unless current_user %>
+	<div><a href="auth/facebook" id="use_button">友達を検索する</a></div>
+    <% end %>
 	<div id="ad">
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!-- facebook search responsive -->
@@ -91,7 +92,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th class="query_th">大学（最終学歴）</th>
+				<th class="query_th">学校</th>
 				<td class="query_td">
 					<input type="text" id="education" />
 					<input type="checkbox" id="latestEducation_show_empty" class="trigger_filter" value="true">データがない人を表示
@@ -144,6 +145,7 @@
 </div>
 </div>
 
+<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

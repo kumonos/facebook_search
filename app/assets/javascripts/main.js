@@ -15,19 +15,18 @@ var FBSearch = {
     var ul = $("#friends");
     for(var i = 0; i < FBSearch.friends.length; i ++){
       var friend = FBSearch.friends[i];
-      // set each data
-      friend.age = FBSearch.getAge(i);
 
       // make view html
       var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
       html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
       html += "<div class='friend_info'>";
-      html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
-      html += " work at " + friend.work + "<br />";
-      html += "education: " + friend.education + "<br />";
-      html += friend.sex + ", " + friend.relationship_status + "<br />";
-      html += "age: " + friend.age + "<br />";
-      html += "location: " + friend.current_location + "<br />";
+      html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a><br />";
+      html += "職歴： " + FBSearch.getWork(i) + "<br />";
+      html += "学歴： " + FBSearch.getEducation(i) + "<br />";
+      html += "性別： " + FBSearch.getSex(i) + "<br />";
+      html += "交際ステータス： " + FBSearch.getRelation(i) + "<br />";
+      html += "年齢： " + FBSearch.getAge(i) + "<br />";
+      html += "居住地： " + FBSearch.getLocation(i) + "<br />";
       html += "</div>";
       html += "</li>";
       ul.append(html);
@@ -73,7 +72,7 @@ var FBSearch = {
   },
 
   getAge: function(friendIndex){
-    var age = "";
+    var age = "非公開";
     var friend = this.friends[friendIndex];
     var birthday_date = friend.birthday_date;
     if(!birthday_date){
@@ -91,6 +90,56 @@ var FBSearch = {
     today = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
     age = Math.floor((today - birthday) / 10000);
     return age;
+  },
+
+  getWork: function(friendIndex){
+    var friend = this.friends[friendIndex];
+    var work = friend.work;
+    if(!work || work == ""){
+      return "非公開";
+    } else {
+      return work;
+    }
+  },
+
+  getEducation: function(friendIndex){
+    var friend = this.friends[friendIndex];
+    var education = friend.education;
+    if(!education || education == ""){
+      return "非公開";
+    } else {
+      return education;
+    }
+  },
+
+  getSex: function(friendIndex){
+    var friend = this.friends[friendIndex];
+    var sex = friend.sex;
+    if(!sex || sex == ""){
+      return "非公開";
+    } else {
+      return sex;
+    }
+  },
+
+  getRelation: function(friendIndex){
+    var friend = this.friends[friendIndex];
+    var relation = friend.relationship_status;
+    if(!relation || relation == ""){
+      return "非公開";
+    } else {
+      return relation;
+    }
+  },
+
+  getLocation: function(friendIndex){
+    var friend = this.friends[friendIndex];
+    var location = friend.current_location;
+    if(!location || location == ""){
+      return "非公開";
+    } else {
+      return location;
+    }
   },
 
   filterResults: function(param){

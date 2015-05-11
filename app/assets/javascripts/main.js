@@ -22,14 +22,12 @@ var FBSearch = {
       var html = "<li id='friend" + friend.uid + "' class='friends_li'>";
       html += "<div class='friend_img'><img src=" + friend.pic + " /></div>";
       html += "<div class='friend_info'>";
-      html += "<input type='checkbox' name='check' id='list' class='list_func' value='list_add' checked /> ";
       html += "<a href='" + friend.profile_url + "' target='_blank'>" + friend.name + "</a>";
       html += " work at " + friend.work + "<br />";
       html += "education: " + friend.education + "<br />";
       html += friend.sex + ", " + friend.relationship_status + "<br />";
       html += "age: " + friend.age + "<br />";
       html += "location: " + friend.current_location + "<br />";
-      //html += "<span id='showphoto_" + friend.uid + "' class='showphoto'>写真を表示</span>";
       html += "</div>";
       html += "</li>";
       ul.append(html);

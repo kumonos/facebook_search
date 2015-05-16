@@ -241,7 +241,7 @@ var FBSearch = {
   },
   getTargetData: function(target, friendIndex){
     if(target == "age_min" || target == "age_max"){
-      return this.friends[friendIndex].age;
+      return this.getAge(friendIndex);
     }
     else if(target.indexOf("sex_") === 0){
       return this.friends[friendIndex].sex;

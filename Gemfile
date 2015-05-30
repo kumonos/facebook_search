@@ -56,6 +56,7 @@ gem 'unicorn-rails'
 gem 'omniauth-facebook'
 gem 'koala'
 gem 'mysql2'
+gem 'newrelic_rpm'
 
 group :assets do
   gem 'bourbon'

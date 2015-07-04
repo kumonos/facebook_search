@@ -26,6 +26,7 @@ var FBSearch = {
       html += "性別： " + FBSearch.getSex(i) + "<br />";
       html += "交際ステータス： " + FBSearch.getRelation(i) + "<br />";
       html += "年齢： " + FBSearch.getAge(i) + "<br />";
+      html += "星座： " + FBSearch.getStarSign(i) + "<br />";
       html += "居住地： " + FBSearch.getLocation(i) + "<br />";
       html += "</div>";
       html += "</li>";
@@ -90,6 +91,49 @@ var FBSearch = {
     today = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
     age = Math.floor((today - birthday) / 10000);
     return age;
+  },
+
+  getStarSign: function(friendIndex){
+    var starSign = "非公開";
+    var friend = this.friends[friendIndex];
+    var birthday_date = friend.birthday_date;
+    if(!birthday_date){
+      return starSign;
+    }
+    var birthdayMonth = Number(birthday_date.substr(0, 2));
+    var birthdayDay = Number(birthday_date.substr(3, 2));
+    if(!birthdayMonth || !birthdayDay){
+      return starSign;
+    }
+
+    //borderValue: month * 100 + day とした場合の境界値
+    var starSigns = [
+      { id: 1, name: 'やぎ座', borderValue: 119 },
+      { id: 2, name: 'みずがめ座', borderValue: 218 },
+      { id: 3, name: 'うお座', borderValue: 320 },
+      { id: 4, name: 'おひつじ座', borderValue: 419 },
+      { id: 5, name: 'おうし座', borderValue: 520 },
+      { id: 6, name: 'ふたご座', borderValue: 621 },
+      { id: 7, name: 'かに座', borderValue: 722 },
+      { id: 8, name: 'しし座', borderValue: 822 },
+      { id: 9, name: 'おとめ座', borderValue: 922 },
+      { id: 10, name: 'てんびん座', borderValue: 1023 },
+      { id: 11, name: 'さそり座', borderValue: 1122 },
+      { id: 12, name: 'いて座', borderValue: 1221 }
+    ];
+
+    var targetValue = birthdayMonth * 100 + birthdayDay;
+    var idx = 0;
+    for(idx = 0; idx < starSigns.length; idx++){
+      if( targetValue <= starSigns[idx].borderValue ){
+        break;
+      }
+    }
+    if(idx === 12){
+      idx = 0;
+    }
+    starSign = starSigns[idx].name;
+    return starSign;
   },
 
   getWork: function(friendIndex){

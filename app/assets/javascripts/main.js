@@ -231,6 +231,21 @@ var FBSearch = {
               }
             }
           }
+          else if(key.indexOf("star_sign_") === 0){
+            if(!query){
+              var starSigns = {yagi: 'やぎ座', mizugame: 'みずがめ座', uo: 'うお座', ohitsuji: 'おひつじ座',
+                               oushi: 'おうし座', futago: 'ふたご座', kani: 'かに座', shishi: 'しし座',
+                               otome: 'おとめ座', tenbin: 'てんびん座', sasori: 'さそり座', ite: 'いて座'};
+              Object.keys(starSigns).forEach(function (k) {
+                if(key == "star_sign_" + k && targetData == starSigns[k]){
+                  show = false;
+                }
+              });
+              if(key == 'star_sign_empty' && targetData == "非公開"){
+                show = false;
+              }
+            }
+          }
           else if(!targetData){
             var id = key + "_show_empty";
             if(key == "age_min" || key == "age_max"){
@@ -292,6 +307,9 @@ var FBSearch = {
     }
     else if(target.indexOf("relationship_status_") === 0){
       return this.friends[friendIndex].relationship_status;
+    }
+    else if(target.indexOf("star_sign_") === 0){
+      return this.getStarSign(friendIndex);
     }
     else{
       data = this.friends[friendIndex][target];
@@ -429,6 +447,11 @@ $(function(){
   $(".relationship_status").click(function(){
     var query = $(this).is(":checked");
     FBSearch.filterResults({target: "relationship_status_" + $(this).val(), query: query});
+  });
+
+  $(".star_sign").click(function(){
+    var query = $(this).is(":checked");
+    FBSearch.filterResults({target: "star_sign_" + $(this).val(), query: query});
   });
 
   $(".trigger_filter").click(function(){

@@ -4,7 +4,7 @@ env = ENV['RAILS_ENV']
 app_name = 'whoswho'
 
 if env == 'production'
-  worker_processes 4
+  worker_processes 1
 else
   worker_processes 2
 end

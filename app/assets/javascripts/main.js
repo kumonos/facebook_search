@@ -390,20 +390,7 @@ $(function(){
   $("#search_main").css("display", "block");
   $(this).css("display", "none");
   $("#friends").text("読み込み中...");
-  FBSearch.getFBFriendsCount().then(function(count){
-    var limit = 100;
-    var loop_num = Math.ceil(count / limit);
-    var current_response = 0;
-
-    var promises = [];
-    for(var i = 0; i < loop_num; i ++){
-      promises.push(FBSearch.getFBFriends(limit, limit * i));
-    }
-
-    return Promise.all(promises);
-  }).then(function(){
-    return FBSearch.getFriends();
-  }).then(function(friends){
+  FBSearch.getFriends().then(function(friends){
     FBSearch.friends = friends;
     FBSearch.buildHtml();
   });
